@@ -38,22 +38,21 @@ public class MyCustomErrorListener implements ANTLRErrorListener{
 
         Token t = (Token) offendingSymbol;
         if(LaLexer.VOCABULARY.getDisplayName(t.getType()).equals("ERRO")){
+            // Grava na saída o erro personalizado para símbolos não identificados, igual ao do léxico
             pw.println("Linha " + t.getLine() + ": " + t.getText() + " - simbolo nao identificado");
         } else if (t.getText().startsWith("\"") && !t.getText().endsWith("\"")){
-            System.out.print("Linha "+line+": cadeia literal nao fechada\n");
-            pw.print("Linha "+line+": cadeia literal nao fechada\n");
-            
+            // Grava na saída o erro personalizado para cadeias não fechadas, igual ao do léxico
+            pw.println("Linha "+line+": cadeia literal nao fechada");
         } else if(t.getText().startsWith("{") && !t.getText().endsWith("}")){
-            System.out.print("Linha "+line+": comentario nao fechado\n");
-            pw.print("Linha "+line+": comentario nao fechado\n");
+            // Grava na saída o erro personalizado para comentários não fechados, igual ao do léxico
+            pw.println("Linha "+line+": comentario nao fechado");
         } else if(t.getText().equals("<EOF>")){
-            System.out.print("Linha "+line+": erro sintatico proximo a "+t.getText().substring(1, t.getText().length() - 1)+"\n");
-            pw.print("Linha "+line+": erro sintatico proximo a "+t.getText().substring(1, t.getText().length() - 1)+"\n");
+            // Agora registra os erros sintáticos. Esse é o caso específico do EOF, pois exige <> ao redor do lexema
+            pw.println("Linha "+line+": erro sintatico proximo a "+t.getText().substring(1, t.getText().length() - 1));
         }else{
-            System.out.print("Linha "+line+": erro sintatico proximo a "+t.getText()+"\n");
-            pw.print("Linha "+line+": erro sintatico proximo a "+t.getText()+"\n");
+            // Registro geral de erro sintático, indicando a linha e o lexema próximo a onde encontrou o erro
+            pw.println("Linha "+line+": erro sintatico proximo a "+t.getText());
         }
-        System.out.print("Fim da compilacao\n");
         pw.print("Fim da compilacao\n");
         throw new RuntimeException();
     }
